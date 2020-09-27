@@ -1,0 +1,25 @@
+{
+    "name": "dice",
+    "displayName": "Dice",
+    "description": "Dice language support",
+    "version": "0.0.1",
+    "engines": {
+        "vscode": "^1.49.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "contributes": {
+        "languages": [{
+            "id": "dice",
+            "aliases": ["Dice", "dice"],
+            "extensions": [".dice"],
+            "configuration": "./language-configuration.json"
+        }],
+        "grammars": [{
+            "language": "dice",
+            "scopeName": "source.dice",
+            "path": "./syntaxes/dice.tmLanguage.json"
+        }]
+    }
+}
