@@ -1,14 +1,16 @@
 {
-    "name": "dice",
-    "displayName": "Dice",
-    "description": "Dice language support",
-    "version": "0.0.1",
+    "name": "dice-vs-code",
+    "displayName": "Dice Syntax Highlighter",
+    "description": "Dice syntax highlighting",
+    "version": "1.0.0",
     "engines": {
         "vscode": "^1.49.0"
     },
     "categories": [
         "Programming Languages"
     ],
+    "publisher": "ellieyhc",
+    "repository": {"url": "https://github.com/ellieyhcheng/dice-vs-code"},
     "contributes": {
         "languages": [{
             "id": "dice",

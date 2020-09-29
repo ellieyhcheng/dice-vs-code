@@ -36,24 +36,6 @@
 			"name": "comment.line",
 			"match": "//.*$"
 		},
-		"paren-expr": {
-			"name": "expression.group",
-			"begin": "\\s*\\(",
-			"end": "\\)",
-			"beginCaptures": {
-				"0": {
-					"name": "punctuation.paren.open"
-				}
-			},
-			"endCaptures": {
-				"0": {
-					"name": "punctuation.paren.close"
-				}
-			},
-			"patterns": [
-				{"include": "#expr"}
-			]
-		},
 		"constant": {
 			"patterns": [
 				{
@@ -256,8 +238,8 @@
 									"match": ","
 								},
 								{
-									"begin": "(?<=[\\(,\\s])",
-									"end": "(?=[,\\)])",
+									"begin": "(?<=[(,\\s])",
+									"end": "(?=[,)])",
 									"patterns": [
 										{"include": "#type"},
 										{
