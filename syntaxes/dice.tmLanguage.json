@@ -3,27 +3,337 @@
 	"name": "Dice",
 	"patterns": [
 		{
-			"include": "#keywords"
-		},
-		{
-			"include": "#strings"
+			"include": "#expr"
 		}
 	],
 	"repository": {
-		"keywords": {
-			"patterns": [{
-				"name": "keyword.control.dice",
-				"match": "\\b(if|while|for|return)\\b"
-			}]
-		},
-		"strings": {
-			"name": "string.quoted.double.dice",
-			"begin": "\"",
-			"end": "\"",
+		"expr": {
 			"patterns": [
 				{
-					"name": "constant.character.escape.dice",
-					"match": "\\\\."
+					"include": "#comment"
+				},
+				{
+					"include": "#control"
+				},
+				{
+					"include": "#constant"
+				},
+				{
+					"include": "#probability"
+				},
+				{
+					"include": "#operator"
+				},
+				{
+					"include": "#tuple"
+				},
+				{
+					"include": "#ident"
+				}
+			]
+		},
+		"comment": {
+			"name": "comment.line",
+			"match": "//.*$"
+		},
+		"paren-expr": {
+			"name": "expression.group",
+			"begin": "\\s*\\(",
+			"end": "\\)",
+			"beginCaptures": {
+				"0": {
+					"name": "punctuation.paren.open"
+				}
+			},
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.paren.close"
+				}
+			},
+			"patterns": [
+				{"include": "#expr"}
+			]
+		},
+		"constant": {
+			"patterns": [
+				{
+					"name": "constant.language",
+					"match": "\\b(true|false)\\b"
+				}
+			]
+		},
+		"operator": {
+			"patterns": [
+				{
+					"name": "keyword.operator.binop",
+					"match": "(?<=[^<>=!&|])(\\+|-|\\*|/|<|<=|>|>=|==|!=|&&|\\|\\||<=>|^)(?=[^=&|>])"
+				},
+				{
+					"name": "keyword.operator.unop",
+					"match": "\\b(fst|snd)\\b"
+				},
+				{
+					"name": "keyword.operator.unop",
+					"match": "(!)(?=[^=])"
+				}
+			]
+		},
+		"probability": {
+			"patterns": [
+				{
+					"name": "keyword.other.probability.observe",
+					"match": "\\bobserve\\b"
+				},
+				{
+					"name": "keyword.other.probability.int",
+					"begin": "\\bint\\b\\s*(\\()",
+					"end": "\\)",
+					"beginCaptures": {
+						"1": {"name": "punctuation.paren.open"}
+					},
+					"endCaptures": {
+						"0": {"name": "punctuation.paren.close"}
+					},
+					"patterns": [
+						{
+							"name": "punctuation.comma",
+							"match": ","
+						},
+						{
+							"name": "constant.numeric",
+							"match": "[0-9]+(\\.[0-9]+)*"
+						}
+					]
+				},
+				{
+					"name": "keyword.other.probability.discrete",
+					"begin": "\\bdiscrete\\b\\s*(\\()",
+					"end": "\\)",
+					"beginCaptures": {
+						"1": {"name": "punctuation.paren.open"}
+					},
+					"endCaptures": {
+						"0": {"name": "punctuation.paren.close"}
+					},
+					"patterns": [
+						{
+							"name": "punctuation.comma",
+							"match": ","
+						},
+						{
+							"name": "constant.numeric",
+							"match": "[0-9]+(\\.[0-9]+)*"
+						}
+					]
+				},
+				{
+					"name": "keyword.other.probability.flip",
+					"begin": "\\bflip\\b",
+					"end": "[0-9]+(\\.[0-9]+)*",
+					"endCaptures": {
+						"0": {
+							"name": "constant.numeric"
+						}
+					}
+				}
+			]
+		},
+		"tuple": {
+			"name": "entity.other.tuple",
+			"begin": "(?!\\b(int|discrete)\\b)\\(",
+			"end": "\\)",
+			"beginCaptures": {
+				"0": {"name": "punctuation.paren.open"}
+			},
+			"endCaptures": {
+				"0": {"name": "punctuation.paren.close"}
+			},
+			"patterns": [
+				{
+					"match": ",",
+					"name": "punctuation.comma"
+				},
+				{"include": "#expr"}
+			]
+		},
+		"control": {
+			"patterns": [
+				{
+					"name": "keyword.control.if",
+					"begin": "(?=\\bif\\b)",
+					"end": "(?=([\\])}]|\\b(else|then|in)\\b))",
+					"patterns": [
+						{
+							"begin": "\\bif\\b",
+							"end": "\\bth(?=en\\b)",
+							"beginCaptures": {
+								"0": {"name": "keyword.control.if.if"}
+							},
+							"endCaptures": {
+								"0": {"name": "keyword.control.if.then"}
+							},
+							"patterns": [{"include": "#expr"}]
+						},
+						{
+							"begin": "(?<=th)en\\b",
+							"end": "\\bel(?=se\\b)",
+							"beginCaptures": {
+								"0": {"name": "keyword.control.if.then"}
+							},
+							"endCaptures": {
+								"0": {"name": "keyword.control.if.else"}
+							},
+							"patterns": [{"include": "#expr"}]
+						},
+						{
+							"begin": "(?<=el)se\\b",
+							"end": "(?=([\\])}]|\\b(else|then|in)\\b))",
+							"endCaptures": {
+								"0": {"name": "keyword.control"}
+							},
+							"beginCaptures": {
+								"0": {"name": "keyword.control.if.else"}
+							},
+							"patterns": [{"include": "#expr"}]
+						}
+					]
+				},
+				{
+					"name": "keyword.control.let",
+					"patterns": [
+						{
+							"begin": "\\blet\\b",
+							"end": "(?=[^=<!>](=)[^=>])",
+							"patterns": [{"include": "#ident"}],
+							"beginCaptures": {
+								"0": {"name": "keyword.control.let.let"}
+							}
+						},
+						{
+							"begin": "(?<=[^=<!>])(=)(?=[^=>])",
+							"beginCaptures": {
+								"0": {"name": "keyword.control.let"}
+							},
+							"end": "\\bin\\b",
+							"endCaptures": {
+								"0": {"name": "keyword.control.let.in"}
+							},
+							"patterns": [{"include": "#expr"}]
+						}
+					]
+				},
+				{
+					"begin": "\\bfun\\b",
+					"end": "\\}",
+					"beginCaptures": {
+						"0": {"name": "entity.name.function"}
+					},
+					"endCaptures": {
+						"0": {"name": "punctuation.brace.close"}
+					},
+					"patterns": [
+						{
+							"name": "entity.name.function.name",
+							"begin": "(?<=\\bfun\\b)",
+							"end": "(?=\\()",
+							"patterns": [
+								{
+									"match": "\\b[^\\s][^\\s]*?\\b"
+								}
+							]
+						},
+						{
+							"name": "entity.name.function.parameter",
+							"begin": "\\(",
+							"end": "\\)",
+							"beginCaptures": {
+								"0": {"name": "punctuation.paren.open"}
+							},
+							"endCaptures": {
+								"0": {"name": "punctuation.paren.close"}
+							},
+							"patterns": [
+								{
+									"name": "punctuation.comma",
+									"match": ","
+								},
+								{
+									"begin": "(?<=[\\(,\\s])",
+									"end": "(?=[,\\)])",
+									"patterns": [
+										{"include": "#type"},
+										{
+											"name": "punctuation.comma",
+											"match": ","
+										},
+										{
+											"name": "punctuation.colon",
+											"match": ":"
+										},
+										{"include": "#ident"}
+									]
+								}
+							]
+						},
+						{
+							"begin": "\\{",
+							"end": "(?=\\})",
+							"beginCaptures": {
+								"0": {"name": "punctuation.brace.open"}
+							},
+							"patterns": [{"include": "#expr"}]
+						}
+					]
+				},
+				{
+					"name": "entity.name.function.call",
+					"begin": "(?!\\bfun\\b\\s*)(?!\\b(discrete|int)\\b)\\b[^\\s][^\\s]*?\\b(?=\\()",
+					"end": "(?<=\\))",
+					"beginCaptures": {
+						"0": {"name": "entity.name.function.name"}
+					},
+					"patterns": [{"include": "#tuple"}]
+				}
+			]
+		},
+		"ident": {
+			"name": "variable.name",
+			"match": "\\b[a-zA-Z_][a-zA-Z0-9_]*\\b"
+		},
+		"type": {
+			"name": "entity.name.type",
+			"patterns": [
+				{
+					"match": "\\bbool\\b"
+				},
+				{
+					"match": "\\bint(\\()([0-9]+)(\\))",
+					"captures": {
+						"1": {"name": "punctuation.paren.open"},
+						"2": {"name": "constant.numeric"},
+						"3": {"name": "punctuation.paren.close"}
+					}
+				},
+				{
+					"begin": "\\(",
+					"end": "\\)",
+					"beginCaptures": {
+						"0": {
+							"name": "punctuation.paren.open"
+						}
+					},
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.paren.close"
+						}
+					},
+					"patterns": [
+						{"include": "$self"},
+						{
+							"name": "punctuation.comma",
+							"match": ","
+						}
+					]
 				}
 			]
 		}
