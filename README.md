@@ -5,7 +5,7 @@ Provides syntax highlighting for the probabilistic programming language [Dice](h
 ## Installation
 This extension is not on VS Code Marketplace as of right now. You can install it manually by downloading the release and running:
 ```shell
-$ code --install-extension dice-vs-code-1.0.0.vsix
+$ code --install-extension dice-vs-code-1.0.1.vsix
 ```
 
 ## Features

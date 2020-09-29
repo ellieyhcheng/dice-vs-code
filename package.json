@@ -2,7 +2,7 @@
     "name": "dice-vs-code",
     "displayName": "Dice Syntax Highlighter",
     "description": "Dice syntax highlighting",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "engines": {
         "vscode": "^1.49.0"
     },

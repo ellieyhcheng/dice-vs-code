@@ -67,11 +67,11 @@
 					"match": "\\bobserve\\b"
 				},
 				{
-					"name": "keyword.other.probability.int",
-					"begin": "\\bint\\b\\s*(\\()",
+					"begin": "\\b(int)\\b\\s*(\\()",
 					"end": "\\)",
 					"beginCaptures": {
-						"1": {"name": "punctuation.paren.open"}
+						"1": {"name": "keyword.other.probability.int"},
+						"2": {"name": "punctuation.paren.open"}
 					},
 					"endCaptures": {
 						"0": {"name": "punctuation.paren.close"}
@@ -88,11 +88,11 @@
 					]
 				},
 				{
-					"name": "keyword.other.probability.discrete",
-					"begin": "\\bdiscrete\\b\\s*(\\()",
+					"begin": "\\b(discrete)\\b\\s*(\\()",
 					"end": "\\)",
 					"beginCaptures": {
-						"1": {"name": "punctuation.paren.open"}
+						"1": {"name": "keyword.other.probability.discrete"},
+						"2": {"name": "punctuation.paren.open"}
 					},
 					"endCaptures": {
 						"0": {"name": "punctuation.paren.close"}
@@ -250,7 +250,10 @@
 											"name": "punctuation.colon",
 											"match": ":"
 										},
-										{"include": "#ident"}
+										{
+											"name": "variable.parameter",
+											"match": "\\b[a-zA-Z_][a-zA-Z0-9_]*\\b"
+										}
 									]
 								}
 							]
