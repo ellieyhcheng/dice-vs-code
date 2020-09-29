@@ -73,4 +73,4 @@ Idents are mapped to variable.name
 
 ### Punctuation
 - Punctuations (that aren't operators) are mapped to punctuation.[punctuation-name\].[open/close]
-- Inludes: ()[]{},
+- Includes: ()[]{},
